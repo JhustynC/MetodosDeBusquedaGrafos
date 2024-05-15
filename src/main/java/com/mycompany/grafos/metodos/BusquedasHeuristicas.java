@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.grafos.metodos;
 
 import java.util.*;
@@ -10,10 +6,6 @@ import com.mycompany.grafos.grafo.Arista;
 import com.mycompany.grafos.grafo.Nodo;
 
 
-/**
- *
- * @author Aarón Ortiz
- */
 public class BusquedasHeuristicas {
     public static ArrayList<Nodo> busquedaDelGradiente(Nodo nodoInicial, boolean imprimirTabla){
         ArrayList<Nodo> recorrido = new ArrayList<>();

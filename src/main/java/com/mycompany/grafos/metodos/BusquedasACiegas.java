@@ -14,14 +14,6 @@ import java.util.Stack;
 import com.mycompany.grafos.grafo.Nodo;
 import javafx.util.Pair;
 
-
-
-import org.graphstream.graph.Graph;
-
-/**
- *
- * @author Aarón Ortiz
- */
 public class BusquedasACiegas {
     private static final ArrayList<Nodo> visitadosComun = new ArrayList<>();
     private static boolean encontradoBidireccional = false;

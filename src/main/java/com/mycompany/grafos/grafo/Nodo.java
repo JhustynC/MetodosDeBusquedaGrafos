@@ -6,10 +6,6 @@ package com.mycompany.grafos.grafo;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author Aarón Ortiz
- */
 public class Nodo implements Comparable<Nodo> {
     private String nombre;
     private Integer peso;

@@ -4,10 +4,6 @@
  */
 package com.mycompany.grafos.grafo;
 
-/**
- *
- * @author Aarón Ortiz
- */
 public class Arista implements Comparable<Arista>{
     private Integer peso;
     private Nodo nodoPadre;

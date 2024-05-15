@@ -13,10 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- *
- * @author Aarón Ortiz
- */
 public class CompiladorCSV {
     
     private static ArrayList<String []> leerCSV(String nombreArchivo) throws FileNotFoundException, IOException{
