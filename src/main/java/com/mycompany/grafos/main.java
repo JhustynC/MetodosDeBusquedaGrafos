@@ -16,7 +16,7 @@ public class main {
 
     public static void main(String[] args) throws IOException {
 
-        HashMap<String, Nodo> grafo = CompiladorCSV.cargarDatos("src\\main\\java\\com\\mycompany\\grafos\\csv\\grafoBueno.csv");
+        HashMap<String, Nodo> grafo = CompiladorCSV.cargarDatos("src\\main\\java\\com\\mycompany\\grafos\\csv\\grafo.csv");
         if (grafo == null){
             System.out.println("Error al cargar el archivo.");
             return;
