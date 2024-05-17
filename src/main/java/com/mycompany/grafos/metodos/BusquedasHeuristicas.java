@@ -16,8 +16,43 @@ public class BusquedasHeuristicas {
         }
 
         do{
-            
-            Nodo nodoPesoMinimo = recorrido.getLast().getHijos().stream().min((n1, n2) -> n1.getPeso().compareTo(n2.getPeso())).orElse(null);
+//            // Obtener los hijos del siguiente nivel del último nodo en el recorrido
+//            List<Nodo> hijosSiguienteNivel = new ArrayList<>();
+//            hijosSiguienteNivel.addAll(recorrido.get(recorrido.size() - 1).getHijos());
+//
+//            // Calcular el promedio de los pesos de los hijos del siguiente nivel
+//            double sumaPesos = 0;
+//            for (Nodo nodo : hijosSiguienteNivel) {
+//                sumaPesos += nodo.getPeso();
+//            }
+//            double promedioPesos = sumaPesos / hijosSiguienteNivel.size();
+//            System.out.println("Promedio: "+promedioPesos);
+//
+//            // Encontrar el hijo más cercano al promedio pero menor que el promedio, o el menor por encima si no hay menores
+//            Nodo nodoPesoMinimo = null;
+//            double distanciaMinima = Double.MAX_VALUE;
+//
+//            for (Nodo hijo : hijosSiguienteNivel) {
+//                double distancia = hijo.getPeso() - promedioPesos;
+//
+//                if (distancia <= 0 && Math.abs(distancia) < distanciaMinima) {
+//                    distanciaMinima = Math.abs(distancia);
+//                    nodoPesoMinimo = hijo;
+//                }
+//            }
+//
+//            // Si no hay nodo menor al promedio, seleccionar el más cercano por encima del promedio
+//            if (nodoPesoMinimo == null) {
+//                for (Nodo hijo : hijosSiguienteNivel) {
+//                    double distancia = hijo.getPeso() - promedioPesos;
+//
+//                    if (distancia > 0 && Math.abs(distancia) < distanciaMinima) {
+//                        distanciaMinima = Math.abs(distancia);
+//                        nodoPesoMinimo = hijo;
+//                    }
+//                }
+//            }
+          Nodo nodoPesoMinimo = recorrido.getLast().getHijos().stream().min((n1, n2) -> n1.getPeso().compareTo(n2.getPeso())).orElse(null);
             
             String extraido = String.format("(%s, %d)", recorrido.getLast().getNombre(), recorrido.getLast().getPeso());
 
@@ -26,26 +61,12 @@ public class BusquedasHeuristicas {
             }
             
             if(imprimirTabla){
-//                Node graphNode = graph.getNode(recorrido.getLast().getNombre());
-//                graphNode.setAttribute("ui.style", "fill-color: red;");
-//                try {
-//                    Thread.sleep(1000); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 String colaString = String.format("(%s, %d)", recorrido.getLast().getNombre(), recorrido.getLast().getPeso());
                 System.out.print(String.format("%-9s|%-25s\n", extraido, colaString));
             }
 
             if(recorrido.getLast().getPeso() == 0){
                 if(imprimirTabla){
-//                    Node graphNode = graph.getNode(recorrido.getLast().getNombre());
-//                    graphNode.setAttribute("ui.style", "fill-color: red;");
-//                    try {
-//                        Thread.sleep(1000); // Pausa por 1 segundo
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
                     String colaString = String.format("(%s, %d)", recorrido.getLast().getNombre(), recorrido.getLast().getPeso());
                     System.out.print(String.format("%-9s|%-25s\n", colaString, ""));
                 }
@@ -83,13 +104,6 @@ public class BusquedasHeuristicas {
                 pilaPrioridad.addAll(listanovisitados);
             }
             if(imprimirTabla){
-//                Node graphNode = graph.getNode(nodoPesoMinimo.getNombre());
-//                graphNode.setAttribute("ui.style", "fill-color: red;");
-//                try {
-//                    Thread.sleep(1000); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 String colaString = pilaPrioridad.stream().map(n -> String.format("(%s, %d)", n.getNombre(), n.getPeso())).reduce("", (a, b) -> a + b + " ");
                 System.out.print(String.format("%-9s|%-25s\n", String.format("(%s,%d)", nodoPesoMinimo.getNombre(), nodoPesoMinimo.getPeso()), colaString));
             }
@@ -123,7 +137,8 @@ public class BusquedasHeuristicas {
             if (!nodoPesoMinimo.getNodoHijo().getHijosAristas().isEmpty()) {
                 List<Arista> listanovisitados = nodoPesoMinimo.getNodoHijo().getHijosAristas();
                 listanovisitados.forEach(t -> {
-                    t.setPeso(t.getPeso() + nodoPesoMinimo.getPeso());
+                    //Sumar todo el recorrido
+//                    t.setPeso(t.getPeso() + nodoPesoMinimo.getPeso());
                     if (!visitados.contains(t.getNodoHijo())) {
                         visitados.add(t.getNodoHijo());
                     }
@@ -132,22 +147,9 @@ public class BusquedasHeuristicas {
             }
             
             if (imprimirTabla) {
-//                Node graphNode = graph.getNode(nodoPesoMinimo.getNodoHijo().getNombre());
-//                graphNode.setAttribute("ui.style", "fill-color: blue;");
-//                try {
-//                    Thread.sleep(100); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                graphNode.setAttribute("ui.style", "fill-color: red;");
                 String colaString = pilaPrioridad.stream().map(n -> String.format("(%s, %d)", n.getNodoHijo().getNombre(), n.getPeso()+n.getNodoHijo().getPeso())).reduce("", (a, b) -> a + b + " ");
                 String extraido = String.format("(%s,%d) -> (%s,%d)", nodoPesoMinimo.getNodoHijo().getNombre(), nodoPesoMinimo.getPeso()+nodoPesoMinimo.getNodoHijo().getPeso(),nodoPesoMinimo.getNodoHijo().getNombre(), nodoPesoMinimo.getPeso());
                 System.out.print(String.format("%-20s|%-25s\n", extraido, colaString));
-//                try {
-////                    Thread.sleep(1000); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
 
             if (visitados.size() == sizeGrafo) {
@@ -157,6 +159,4 @@ public class BusquedasHeuristicas {
         }
         return encontrados;
     }
-
-    
 }

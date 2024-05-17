@@ -1,7 +1,7 @@
 package com.mycompany.grafos;
 
 import com.mycompany.grafos.grafo.Arista;
-import com.mycompany.grafos.csv.CompiladorCSV;
+import com.mycompany.grafos.csv.LecturaCSV;
 import com.mycompany.grafos.grafo.Nodo;
 import com.mycompany.grafos.metodos.BusquedasACiegas;
 import com.mycompany.grafos.metodos.BusquedasHeuristicas;
@@ -16,7 +16,7 @@ public class main {
 
     public static void main(String[] args) throws IOException {
 
-        HashMap<String, Nodo> grafo = CompiladorCSV.cargarDatos("src\\main\\java\\com\\mycompany\\grafos\\csv\\grafo.csv");
+        HashMap<String, Nodo> grafo = LecturaCSV.cargarDatos("src\\main\\java\\com\\mycompany\\grafos\\csv\\grafo.csv");
         if (grafo == null){
             System.out.println("Error al cargar el archivo.");
             return;
@@ -38,7 +38,8 @@ public class main {
                    8) Busqueda A*
                    9) Comparacion todos los metodos
                    10) Salir
-                   Opción:""");
+                   Opción:
+               """);
 
             Scanner sc = new Scanner(System.in);
             String opcion = sc.nextLine();
@@ -69,8 +70,6 @@ public class main {
                     break;
                 case "9":
                     calcularTiemposMetodos(grafo);
-//                    System.out.println("Presione Enter para continuar...");
-//                    sc.nextLine();
                     break;
                 case "10":
                     System.out.println("===Gracias===");

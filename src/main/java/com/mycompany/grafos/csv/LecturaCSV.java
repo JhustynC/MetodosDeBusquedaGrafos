@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CompiladorCSV {
+public class LecturaCSV {
     
     private static ArrayList<String []> leerCSV(String nombreArchivo) throws FileNotFoundException, IOException{
         BufferedReader buffer = null;
@@ -38,7 +38,7 @@ public class CompiladorCSV {
 
     public static HashMap<String, Nodo> cargarDatos(String pathArchivo) throws IOException{
         HashMap<String, Nodo> mapaNodos = new HashMap<>();
-        ArrayList<String []> listaAristas = CompiladorCSV.leerCSV(pathArchivo);
+        ArrayList<String []> listaAristas = LecturaCSV.leerCSV(pathArchivo);
         if (listaAristas.isEmpty()){
             return null;
         }

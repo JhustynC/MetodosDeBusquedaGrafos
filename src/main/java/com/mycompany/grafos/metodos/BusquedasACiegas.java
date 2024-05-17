@@ -16,7 +16,7 @@ import javafx.util.Pair;
 
 public class BusquedasACiegas {
     private static final ArrayList<Nodo> visitadosComun = new ArrayList<>();
-    private static boolean encontradoBidireccional = false;
+    private static boolean finishBusquedaBi = false;
     
     private static class hiloBusquedaAmplitud extends Thread{
         private Queue<Nodo> cola;
@@ -56,7 +56,7 @@ public class BusquedasACiegas {
                     nodoExtraido = cola.remove();
                     if(imprimir) System.out.println("------------------------------\nExtraccion: " + nodoExtraido.getNombre());
                     if(visitadosComun.contains(nodoExtraido)){
-                        encontradoBidireccional = true;
+                        finishBusquedaBi = true;
                         visitadosComun.notifyAll();
                         return;
                     }else{
@@ -107,13 +107,6 @@ public class BusquedasACiegas {
 
             Nodo nodoExtraido = cola.remove();
             if (imprimirTabla) {
-                //Node graphNode = graph.getNode(nodoExtraido.getNombre());
-                //graphNode.setAttribute("ui.style", "fill-color: red;");
-//                try {
-//                  //  Thread.sleep(500); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 System.out.print(String.format("%-9s|%-25s\n", nodoExtraido.getNombre(), colaString));
             }
 
@@ -156,14 +149,7 @@ public class BusquedasACiegas {
             }
             Nodo nodoExtraido = pila.pop();
             if (imprimirTabla) {
-//                Node graphNode = graph.getNode(nodoExtraido.getNombre());
-//                graphNode.setAttribute("ui.style", "fill-color: red;");
                 System.out.print(String.format("%-9s|%-25s\n", nodoExtraido.getNombre(), colaString));
-//                try {
-//                    Thread.sleep(1000); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
             if(nodosFinal.contains(nodoExtraido)){
                 encontrados.add(nodoExtraido);
@@ -192,7 +178,7 @@ public class BusquedasACiegas {
         for (Nodo buscaNodo : nodosFinal) {
 
             visitadosComun.clear();
-            encontradoBidireccional = false;
+            finishBusquedaBi = false;
             
             ThreadGroup grupo = new ThreadGroup("grupo");
             hiloBusquedaAmplitud threadInicio = new hiloBusquedaAmplitud(grupo, nodoInicial, buscaNodo, "Inicial " + nodoInicial.getNombre(), imprimir);
@@ -205,7 +191,7 @@ public class BusquedasACiegas {
             threadFinal.start();
 
             synchronized (visitadosComun) {
-                while(!encontradoBidireccional){
+                while(!finishBusquedaBi){
                     try {
                         visitadosComun.wait();
                     } catch (InterruptedException e) {
@@ -240,7 +226,6 @@ public class BusquedasACiegas {
         int nivel = 0;
 
         while(visitados.size() != numNodos){
-//            graficarGrafo.resetGraph(graph);
             if(imprimirTabla) System.out.printf("----------Nivel %d----------\n", nivel++);
             Stack<Nodo> pila = new Stack<>();
             ArrayList<Nodo> visitadosIteracion = new ArrayList<>();
@@ -258,14 +243,7 @@ public class BusquedasACiegas {
                 }
                 Nodo nodoExtraido = pila.pop();
                 if (imprimirTabla) {
-//                    Node graphNode = graph.getNode(nodoExtraido.getNombre());
-//                    graphNode.setAttribute("ui.style", "fill-color: red;");
                     System.out.print(String.format("%-9s|%-25s\n", nodoExtraido.getNombre(), colaString));
-//                    try {
-//                        Thread.sleep(1000); // Pausa por 1 segundo
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
                 }
                 if(nodosFinal.contains(nodoExtraido)){
                     encontrados.add(nodoExtraido);
@@ -294,7 +272,18 @@ public class BusquedasACiegas {
     }
     
     public static ArrayList<Pair<Nodo, Integer>> busquedaCostoUniforme(Nodo nodoInicial, ArrayList<Nodo> nodosFinal, Integer sizeGrafo, boolean imprimirTabla){
-        PriorityQueue<Pair<Nodo, Integer>> listaRecorrido = new PriorityQueue<>(Comparator.comparing((t) -> t.getRight()));
+//        PriorityQueue<Pair<Nodo, Integer>> listaRecorrido = new PriorityQueue<>(Comparator.comparing((t) -> t.getRight()));
+        PriorityQueue<Pair<Nodo, Integer>> listaRecorrido = new PriorityQueue<>(
+                (pair1, pair2) -> {
+                    int pesoCompare = pair1.getRight().compareTo(pair2.getRight());
+                    if (pesoCompare != 0) {
+                        return pesoCompare;
+                    } else {
+                        return pair1.getLeft().getNombre().compareTo(pair2.getLeft().getNombre());
+                    }
+                }
+        );
+
         ArrayList<Nodo> visitados = new ArrayList<>();
         ArrayList<Pair<Nodo, Integer>> encontrados = new ArrayList<>();
         listaRecorrido.add(new Pair<>(nodoInicial,0));
@@ -330,45 +319,27 @@ public class BusquedasACiegas {
                 }
 
                 if (imprimirTabla) {
-//                    Node graphNode = graph.getNode(pairExtraido.getLeft().getNombre());
-//                    graphNode.setAttribute("ui.style", "fill-color: blue;");
-//                    try {
-//                        Thread.sleep(100); // Pausa por 1 segundo
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    graphNode.setAttribute("ui.style", "fill-color: red;");
                     System.out.print(String.format("%-9s|%-60s\n", extraido, recorrido));
-//                    try {
-//                        Thread.sleep(1000); // Pausa por 1 segundo
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
                 }
                 continue;
             }
 
             String recorrido = "";
-            pairExtraido.getLeft().getAristasHijos().forEach(arista -> listaRecorrido.add(new Pair<>(arista.getNodoHijo(),arista.getPeso() + pairExtraido.getRight())));
+
+//            pairExtraido.getLeft().getAristasHijos().forEach(arista -> listaRecorrido.add(new Pair<>(arista.getNodoHijo(),arista.getPeso() + pairExtraido.getRight())));
+            pairExtraido.getLeft().getAristasHijos().forEach(arista -> {
+                Pair<Nodo, Integer> newPair = new Pair<>(arista.getNodoHijo(), arista.getPeso() + pairExtraido.getRight());
+                if (!listaRecorrido.contains(newPair)) {
+                    listaRecorrido.add(newPair);
+                }
+            });
+
             for (Pair<Nodo, Integer> n : listaRecorrido) {
                 String aux = String.format("%s(%d), ", n.getLeft().getNombre(), n.getRight());
                 recorrido += aux;
             }
             if (imprimirTabla) {
-//                Node graphNode = graph.getNode(pairExtraido.getLeft().getNombre());
-//                graphNode.setAttribute("ui.style", "fill-color: blue;");
-//                try {
-//                    Thread.sleep(100); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                graphNode.setAttribute("ui.style", "fill-color: red;");
                 System.out.print(String.format("%-9s|%-60s\n", extraido, recorrido));
-//                try {
-//                    Thread.sleep(1000); // Pausa por 1 segundo
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
 
             if(visitados.size() == sizeGrafo){
